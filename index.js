@@ -13,7 +13,7 @@ var find           = require('es5-ext/array/#/find')
   , ensureDocument = require('dom-ext/html-document/valid-html-document')
   , reflow         = require('dom-ext/html-document/#/reflow')
   , resetForms     = require('html-dom-ext/element/#/reset-forms')
-  , ensureNodeConf = require('./lib/ensure-node-conf')
+  , ensureView     = require('./ensure-view')
   , SiteNode       = require('./lib/node');
 
 var SiteTree = module.exports = function (document) {
@@ -63,8 +63,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 }, memoizeMethods({
 	// Resolves template (for given template/context combination should be invoked only once)
 	_resolve: d(function (conf, context) {
-		ensureNodeConf(conf);
-		if (!conf._parent) {
+		if (!ensureView(conf)._parent) {
 			if (this.root) throw new TypeError('Node must originate from same tree');
 			return (this.root = new SiteNode(conf, context, this));
 		}
