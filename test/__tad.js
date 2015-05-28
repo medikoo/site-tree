@@ -20,5 +20,6 @@ if (document) {
 }
 
 exports.context = document ? {
-	document: document
+	document: document,
+	setTimeout: setTimeout
 } : {};
