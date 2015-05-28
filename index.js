@@ -27,7 +27,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 
 	// Loads given view conf, so it's current
 	load: d(function (conf, context) {
-		var node = this._resolve(conf, context), current = this.current, common;
+		var node = this._resolve(conf, context[conf._match], context), current = this.current, common;
 		if (current === node) return;
 		if (current) {
 			common = find.call(current.ancestors, function (ancestor) {
@@ -62,11 +62,12 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 	})
 }, memoizeMethods({
 	// Resolves template (for given template/context combination should be invoked only once)
-	_resolve: d(function (conf, context) {
+	_resolve: d(function (conf, matcher, context) {
 		if (!ensureView(conf)._parent) {
 			if (this.root) throw new TypeError('Node must originate from same tree');
 			return (this.root = new SiteNode(conf, context, this));
 		}
-		return new SiteNode(conf, context, this._resolve(conf._parent, context));
+		return new SiteNode(conf, context,
+			this._resolve(conf._parent, context[conf._parent._match], context));
 	}, { getNormalizer: getNormalizer })
 }))));
