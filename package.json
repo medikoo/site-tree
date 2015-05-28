@@ -1,0 +1,38 @@
+{
+  "name": "site-tree",
+  "version": "0.0.0",
+  "description": "A View engine",
+  "author": "Mariusz Nowak <medyk@medikoo.com> (http://www.medikoo.com/)",
+  "keywords": [
+    "view",
+    "site",
+    "tree",
+    "markup"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/medikoo/site-tree.git"
+  },
+  "dependencies": {
+    "es5-ext": "^0.10.7",
+    "d": "^0.1.1",
+    "dom-ext ": "git://github.com/medikoo/dom-ext.git#6d893939",
+    "html-dom-ext ": "git://github.com/medikoo/html-dom-ext.git#4ab1f214",
+    "event-emitter": "^0.3.3",
+    "memoizee": "^0.3.8"
+  },
+  "devDependencies": {
+    "class-list": "^0.1.1",
+    "domjs": "git://github.com/medikoo/domjs.git#960f5b9ae",
+    "jsdom": "^3.1.2",
+    "tad": "~0.2.1",
+    "xlint": "~0.2.1",
+    "xlint-jslint-medikoo": "~0.1.2"
+  },
+  "scripts": {
+    "lint": "node node_modules/xlint/bin/xlint --linter=node_modules/xlint-jslint-medikoo/index.js --no-cache --no-stream",
+    "lint-console": "node node_modules/xlint/bin/xlint --linter=node_modules/xlint-jslint-medikoo/index.js --watch",
+    "test": "node node_modules/tad/bin/tad"
+  },
+  "license": "MIT"
+}
