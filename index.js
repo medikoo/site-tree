@@ -63,10 +63,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 }, memoizeMethods({
 	// Resolves template (for given template/context combination should be invoked only once)
 	_resolve: d(function (conf, matcher, context) {
-		if (!ensureView(conf)._parent) {
-			if (this.root) throw new TypeError('Node must originate from same tree');
-			return (this.root = new SiteNode(conf, context, this));
-		}
+		if (!ensureView(conf)._parent) return new SiteNode(conf, context, this);
 		return new SiteNode(conf, context,
 			this._resolve(conf._parent, context[conf._parent._match], context));
 	}, { getNormalizer: getNormalizer })
