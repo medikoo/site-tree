@@ -11,6 +11,7 @@ var find           = require('es5-ext/array/#/find')
   , memoizeMethods = require('memoizee/methods-plain')
   , getNormalizer  = partial.call(require('memoizee/normalizers/get-fixed'), 2)
   , ensureDocument = require('dom-ext/html-document/valid-html-document')
+  , reflow         = require('dom-ext/html-document/#/reflow')
   , resetForms     = require('html-dom-ext/element/#/reset-forms')
   , ensureNodeConf = require('./lib/ensure-node-conf')
   , SiteNode       = require('./lib/node');
@@ -44,6 +45,8 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 		});
 		node._load();
 		this.current = node;
+		// Assure repaint after content change
+		reflow.call(this.document);
 		this.emit('load', node);
 	}),
 
