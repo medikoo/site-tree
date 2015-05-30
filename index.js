@@ -61,7 +61,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 		resetForms.call(element);
 	})
 }, memoizeMethods({
-	// Resolves template (for given template/context combination should be invoked only once)
+	// Resolves template (for given template/matcher combination should be invoked only once)
 	_resolve: d(function (conf, matcher, context) {
 		if (!ensureView(conf)._parent) return new SiteNode(conf, context, this);
 		return new SiteNode(conf, context,
