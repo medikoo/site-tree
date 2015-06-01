@@ -5,6 +5,7 @@
 var find           = require('es5-ext/array/#/find')
   , includes       = require('es5-ext/array/#/contains')
   , assign         = require('es5-ext/object/assign')
+  , ensureCallable = require('es5-ext/object/valid-callable')
   , partial        = require('es5-ext/function/#/partial')
   , d              = require('d')
   , ee             = require('event-emitter')
@@ -54,6 +55,10 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 	// (this method may be overriden for custom needs)
 	resolveTemplate: d(function (fn, context) { return fn.call(context); }),
 
+	// Template validation function
+	// Defined on prototype, so it can be customized together with resolveTemplate
+	ensureTemplate: d(ensureCallable),
+
 	// After elements are exposed in a view. Proceed with reset operations
 	// (this method may be overriden for custom needs)
 	resetElement: d(function (element) {
@@ -63,7 +68,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 }, memoizeMethods({
 	// Resolves template (for given template/matcher combination should be invoked only once)
 	_resolve: d(function (conf, matcher, context) {
-		if (!ensureView(conf)._parent) return new SiteNode(conf, context, this);
+		if (!ensureView(conf, this)._parent) return new SiteNode(conf, context, this);
 		return new SiteNode(conf, context,
 			this._resolve(conf._parent, context[conf._parent._match], context));
 	}, { getNormalizer: getNormalizer })
