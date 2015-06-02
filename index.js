@@ -43,22 +43,21 @@ var SiteTree = module.exports = Object.defineProperties(function (document) {
 			}
 			if (value.content != null) {
 				this.ensureTemplate(value.content);
-				isConf = true;
 				if (value.prepend != null) {
 					throw new TypeError("'prepend' configuration should not be used together with 'content'");
 				}
 				if (value.append != null) {
 					throw new TypeError("'append' configuration should not be used together with 'content'");
 				}
-			} else {
-				if (value.prepend != null) {
-					this.ensureTemplate(value.prepend);
-					isConf = true;
-				}
-				if (value.append != null) {
-					this.ensureTemplate(value.append);
-					isConf = true;
-				}
+				return;
+			}
+			if (value.prepend != null) {
+				this.ensureTemplate(value.prepend);
+				isConf = true;
+			}
+			if (value.append != null) {
+				this.ensureTemplate(value.append);
+				isConf = true;
 			}
 			if (!isConf) this.ensureTemplate(value);
 		}, this);
@@ -79,23 +78,30 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 	resolveView: d(function (conf, context) {
 		var map = [];
 		forEach(conf, function (setup, id) {
-			var conf;
+			var conf, isConf;
 			if (id[0] === '_') return;
 			map.push(conf = {});
 			if (rootNames[id]) conf.element = resolveRootElement(this.document, id);
 			else conf.element = this.document.getElementById(id);
 			if (!conf.element) throw new TypeError("Could not find element of id " + stringify(id));
-			if (typeof setup === 'function') {
-				conf.content = this.resolveTemplate(setup, context);
+			if (setup.class) {
+				conf.class = setup.class;
+				isConf = true;
+			}
+			if (setup.content != null) {
+				conf.content = this.resolveTemplate(setup.content, context);
 				return;
 			}
-			if (setup.class) conf.class = setup.class;
-			if (setup.content) {
-				conf.content = this.resolveTemplate(setup.content, context);
-			} else {
-				if (setup.prepend) conf.prepend = this.resolveTemplate(setup.prepend, context);
-				if (setup.append) conf.append = this.resolveTemplate(setup.append, context);
+			if (setup.prepend != null) {
+				conf.prepend = this.resolveTemplate(setup.prepend, context);
+				isConf = true;
 			}
+			if (setup.append != null) {
+				conf.append = this.resolveTemplate(setup.append, context);
+				isConf = true;
+			}
+			if (isConf) return;
+			conf.content = this.resolveTemplate(setup, context);
 		}, this);
 		return map;
 	}),
