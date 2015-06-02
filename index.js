@@ -57,7 +57,7 @@ var SiteTree = module.exports = Object.defineProperties(function (document) {
 
 	// Default template resolver, it should return documentFragment instance
 	// (this method may be overriden on subclasses for custom needs)
-	resolveTemplate: d(function (fn, context) { return fn.call(context); }),
+	resolveTemplate: d(function (tpl, context) { return tpl.call(context); }),
 
 	// View validation function
 	// (this method may be overriden on subclasses for custom needs)
