@@ -5,22 +5,67 @@
 var find           = require('es5-ext/array/#/find')
   , includes       = require('es5-ext/array/#/contains')
   , assign         = require('es5-ext/object/assign')
+  , forEach        = require('es5-ext/object/for-each')
   , ensureCallable = require('es5-ext/object/valid-callable')
+  , ensureObject   = require('es5-ext/object/valid-object')
+  , ensureValue    = require('es5-ext/object/valid-value')
   , partial        = require('es5-ext/function/#/partial')
   , d              = require('d')
   , ee             = require('event-emitter')
   , memoizeMethods = require('memoizee/methods-plain')
   , getNormalizer  = partial.call(require('memoizee/normalizers/get-fixed'), 2)
+  , ensureIdent    = require('dom-ext/element/ensure-ident')
   , ensureDocument = require('dom-ext/html-document/valid-html-document')
   , reflow         = require('dom-ext/html-document/#/reflow')
   , resetForms     = require('html-dom-ext/element/#/reset-forms')
-  , ensureView     = require('./ensure-view')
   , SiteNode       = require('./lib/node');
 
-var SiteTree = module.exports = function (document) {
+var SiteTree = module.exports = Object.defineProperties(function (document) {
 	if (!(this instanceof SiteTree)) return new SiteTree(document);
 	this.document = ensureDocument(document);
-};
+}, {
+	// Default template function resolver, it should return documentFragment instance
+	// (this method may be overriden on subclasses for custom needs)
+	resolveTemplate: d(function (fn, context) { return fn.call(context); }),
+
+	ensureView: d(function (conf) {
+		forEach(ensureObject(conf), function (value, key) {
+			var isConf;
+			if (key[0] === '_') return;
+			ensureIdent(key);
+			ensureValue(value);
+			if (value.class != null) {
+				ensureObject(value.class);
+				isConf = true;
+			}
+			if (value.content != null) {
+				this.ensureTemplate(value.content);
+				isConf = true;
+				if (value.prepend != null) {
+					throw new TypeError("'prepend' configuration should not be used together with 'content'");
+				}
+				if (value.append != null) {
+					throw new TypeError("'append' configuration should not be used together with 'content'");
+				}
+			} else {
+				if (value.prepend != null) {
+					this.ensureTemplate(value.prepend);
+					isConf = true;
+				}
+				if (value.append != null) {
+					this.ensureTemplate(value.append);
+					isConf = true;
+				}
+			}
+			if (!isConf) this.ensureTemplate(value);
+		}, this);
+		return conf;
+	}),
+
+	// Template validation function
+	// (this method may be overriden on subclasses for custom needs)
+	ensureTemplate: d(ensureCallable)
+});
 
 ee(Object.defineProperties(SiteTree.prototype, assign({
 	root: d(null),
@@ -51,14 +96,6 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 		this.emit('load', node);
 	}),
 
-	// Default template function resolver, it should return documentFragment instance
-	// (this method may be overriden for custom needs)
-	resolveTemplate: d(function (fn, context) { return fn.call(context); }),
-
-	// Template validation function
-	// Defined on prototype, so it can be customized together with resolveTemplate
-	ensureTemplate: d(ensureCallable),
-
 	// After elements are exposed in a view. Proceed with reset operations
 	// (this method may be overriden for custom needs)
 	resetElement: d(function (element) {
@@ -68,7 +105,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 }, memoizeMethods({
 	// Resolves template (for given template/matcher combination should be invoked only once)
 	_resolve: d(function (conf, matcher, context) {
-		if (!ensureView(conf, this)._parent) return new SiteNode(conf, context, this);
+		if (!this.constructor.ensureView(conf, this)._parent) return new SiteNode(conf, context, this);
 		return new SiteNode(conf, context,
 			this._resolve(conf._parent, context[conf._parent._match], context));
 	}, { getNormalizer: getNormalizer })
