@@ -29,36 +29,6 @@ var SiteTree = module.exports = Object.defineProperties(function (document) {
 	if (!(this instanceof SiteTree)) return new SiteTree(document);
 	this.document = ensureDocument(document);
 }, {
-	// Default view resolver
-	// (this method may be overriden on subclasses for custom needs)
-	resolveView: d(function (document, conf, context) {
-		var map = [];
-		forEach(conf, function (setup, id) {
-			var conf;
-			if (id[0] === '_') return;
-			map.push(conf = {});
-			if (rootNames[id]) conf.element = resolveRootElement(document, id);
-			else conf.element = document.getElementById(id);
-			if (!conf.element) throw new TypeError("Could not find element of id " + stringify(id));
-			if (typeof setup === 'function') {
-				conf.content = this.resolveTemplate(setup, context);
-				return;
-			}
-			if (setup.class) conf.class = setup.class;
-			if (setup.content) {
-				conf.content = this.resolveTemplate(setup.content, context);
-			} else {
-				if (setup.prepend) conf.prepend = this.resolveTemplate(setup.prepend, context);
-				if (setup.append) conf.append = this.resolveTemplate(setup.append, context);
-			}
-		}, this);
-		return map;
-	}),
-
-	// Default template resolver, it should return documentFragment instance
-	// (this method may be overriden on subclasses for custom needs)
-	resolveTemplate: d(function (tpl, context) { return tpl.call(context); }),
-
 	// View validation function
 	// (this method may be overriden on subclasses for custom needs)
 	ensureView: d(function (conf) {
@@ -103,6 +73,36 @@ var SiteTree = module.exports = Object.defineProperties(function (document) {
 ee(Object.defineProperties(SiteTree.prototype, assign({
 	root: d(null),
 	current: d(null),
+
+	// Default view resolver
+	// (this method may be overriden on subclasses for custom needs)
+	resolveView: d(function (conf, context) {
+		var map = [];
+		forEach(conf, function (setup, id) {
+			var conf;
+			if (id[0] === '_') return;
+			map.push(conf = {});
+			if (rootNames[id]) conf.element = resolveRootElement(this.document, id);
+			else conf.element = this.document.getElementById(id);
+			if (!conf.element) throw new TypeError("Could not find element of id " + stringify(id));
+			if (typeof setup === 'function') {
+				conf.content = this.resolveTemplate(setup, context);
+				return;
+			}
+			if (setup.class) conf.class = setup.class;
+			if (setup.content) {
+				conf.content = this.resolveTemplate(setup.content, context);
+			} else {
+				if (setup.prepend) conf.prepend = this.resolveTemplate(setup.prepend, context);
+				if (setup.append) conf.append = this.resolveTemplate(setup.append, context);
+			}
+		}, this);
+		return map;
+	}),
+
+	// Default template resolver, it should return documentFragment instance
+	// (this method may be overriden on subclasses for custom needs)
+	resolveTemplate: d(function (tpl, context) { return tpl.call(context); }),
 
 	// Loads given view conf, so it's current
 	load: d(function (conf, context) {
