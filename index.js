@@ -144,7 +144,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 }, memoizeMethods({
 	// Resolves template (for given template/matcher combination should be invoked only once)
 	_resolve: d(function (conf, matcher, context) {
-		if (!this.constructor.ensureView(conf, this)._parent) return new SiteNode(conf, context, this);
+		if (!this.constructor.ensureView(conf)._parent) return new SiteNode(conf, context, this);
 		return new SiteNode(conf, context,
 			this._resolve(conf._parent, context[conf._parent._match], context));
 	}, { getNormalizer: getNormalizer })
