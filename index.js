@@ -9,7 +9,6 @@ var find               = require('es5-ext/array/#/find')
   , ensureCallable     = require('es5-ext/object/valid-callable')
   , ensureObject       = require('es5-ext/object/valid-object')
   , ensureValue        = require('es5-ext/object/valid-value')
-  , identity           = require('es5-ext/function/identity')
   , partial            = require('es5-ext/function/#/partial')
   , d                  = require('d')
   , ee                 = require('event-emitter')
@@ -30,13 +29,7 @@ var SiteTree = module.exports = Object.defineProperties(function (document) {
 	if (!(this instanceof SiteTree)) return new SiteTree(document);
 	this.document = ensureDocument(document);
 }, {
-	// Raw view validation function.
-	// In this base class raw view, is already resolved view configuration, so it
-	// fallbacks to ensureView
-	ensureRawView: d(function (conf) { return this.ensureView(conf); }),
-
 	// View validation function
-	// (this method may be overriden on subclasses for custom needs)
 	ensureView: d(function (conf) {
 		forEach(ensureObject(conf), function (value, key) {
 			var isConf;
@@ -79,13 +72,9 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 	root: d(null),
 	current: d(null),
 
-	// Resolves raw view input into view configuration object.
-	// By default it's assumed as view configuration object already so there's nothing to do
-	// However some SiteTree extension may rely on custom format which will demand resolution step
-	resolveRawView: d(identity),
-
 	// Resolves view configuration into DOM map
-	// It's done once, and on demand, so right before we want to present given view in window
+	// It's done once, and on demand, so right before we want to present given view in a window
+	// for a first time
 	resolveView: d(function (conf, context) {
 		var map = [];
 		forEach(conf, function (setup, id) {
@@ -156,7 +145,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 	// Resolves template (for given template/matcher combination should be invoked only once)
 	_resolve: d(function (conf, matcher, context) {
 		var parent;
-		conf = this.resolveRawView(this.constructor.ensureView(conf));
+		conf = this.constructor.ensureView(conf);
 		if (conf._parent) parent = this._resolve(conf._parent, context[conf._parent._match], context);
 		else parent = this;
 		return new SiteNode(conf, context, parent);
