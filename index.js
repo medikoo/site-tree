@@ -78,7 +78,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 	// by default it's assumed as JS object already so there's nothing to resolve
 	// however some SiteTree extension may rely on format that needs to be
 	// parsed into JS object view configuration.
-	resolveViewConf: d(identity),
+	resolveRawView: d(identity),
 
 	// Default view resolver
 	// (this method may be overriden on subclasses for custom needs)
@@ -152,7 +152,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 	// Resolves template (for given template/matcher combination should be invoked only once)
 	_resolve: d(function (conf, matcher, context) {
 		var parent;
-		conf = this.resolveViewConf(this.constructor.ensureView(conf));
+		conf = this.resolveRawView(this.constructor.ensureView(conf));
 		if (conf._parent) parent = this._resolve(conf._parent, context[conf._parent._match], context);
 		else parent = this;
 		return new SiteNode(conf, context, parent);
