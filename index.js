@@ -9,6 +9,7 @@ var find               = require('es5-ext/array/#/find')
   , ensureCallable     = require('es5-ext/object/valid-callable')
   , ensureObject       = require('es5-ext/object/valid-object')
   , ensureValue        = require('es5-ext/object/valid-value')
+  , identity           = require('es5-ext/function/identity')
   , partial            = require('es5-ext/function/#/partial')
   , d                  = require('d')
   , ee                 = require('event-emitter')
@@ -72,6 +73,12 @@ var SiteTree = module.exports = Object.defineProperties(function (document) {
 ee(Object.defineProperties(SiteTree.prototype, assign({
 	root: d(null),
 	current: d(null),
+
+	// Default view configuration resolver
+	// by default it's assumed as JS object already so there's nothing to resolve
+	// however some SiteTree extension may rely on format that needs to be
+	// parsed into JS object view configuration.
+	resolveViewConf: d(identity),
 
 	// Default view resolver
 	// (this method may be overriden on subclasses for custom needs)
@@ -144,8 +151,10 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 }, memoizeMethods({
 	// Resolves template (for given template/matcher combination should be invoked only once)
 	_resolve: d(function (conf, matcher, context) {
-		if (!this.constructor.ensureView(conf)._parent) return new SiteNode(conf, context, this);
-		return new SiteNode(conf, context,
-			this._resolve(conf._parent, context[conf._parent._match], context));
+		var parent;
+		conf = this.resolveViewConf(this.constructor.ensureView(conf));
+		if (conf._parent) parent = this._resolve(conf._parent, context[conf._parent._match], context);
+		else parent = this;
+		return new SiteNode(conf, context, parent);
 	}, { getNormalizer: getNormalizer })
 }))));
