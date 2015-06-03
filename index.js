@@ -30,6 +30,11 @@ var SiteTree = module.exports = Object.defineProperties(function (document) {
 	if (!(this instanceof SiteTree)) return new SiteTree(document);
 	this.document = ensureDocument(document);
 }, {
+	// Raw view validation function.
+	// In this base class raw view, is already resolved view configuration, so it
+	// fallbacks to ensureView
+	ensureRawView: d(function (conf) { return this.ensureView(conf); }),
+
 	// View validation function
 	// (this method may be overriden on subclasses for custom needs)
 	ensureView: d(function (conf) {
@@ -74,14 +79,13 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 	root: d(null),
 	current: d(null),
 
-	// Default view configuration resolver
-	// by default it's assumed as JS object already so there's nothing to resolve
-	// however some SiteTree extension may rely on format that needs to be
-	// parsed into JS object view configuration.
+	// Resolves raw view input into view configuration object.
+	// By default it's assumed as view configuration object already so there's nothing to do
+	// However some SiteTree extension may rely on custom format which will demand resolution step
 	resolveRawView: d(identity),
 
-	// Default view resolver
-	// (this method may be overriden on subclasses for custom needs)
+	// Resolves view configuration into DOM map
+	// It's done once, and on demand, so right before we want to present given view in window
 	resolveView: d(function (conf, context) {
 		var map = [];
 		forEach(conf, function (setup, id) {
@@ -113,11 +117,11 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 		return map;
 	}),
 
-	// Default template resolver, it should return documentFragment instance
+	// Resolves template into DOM (document fragment)
 	// (this method may be overriden on subclasses for custom needs)
 	resolveTemplate: d(function (tpl, context) { return tpl.call(context); }),
 
-	// Loads given view conf, so it's current
+	// Loads provided raw view, so it's current
 	load: d(function (conf, context) {
 		var node = this._resolve(conf, context[conf._match], context), current = this.current, common;
 		if (current === node) return;
