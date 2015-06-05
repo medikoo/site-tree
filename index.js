@@ -82,7 +82,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 			if (id[0] === '_') return;
 			map.push(conf = {});
 			if (rootNames[id]) conf.element = resolveRootElement(this.document, id);
-			else conf.element = this.document.getElementById(id);
+			if (!conf.element) conf.element = this.document.getElementById(id);
 			if (!conf.element) throw new TypeError("Could not find element of id " + stringify(id));
 			if (setup.class) {
 				conf.class = setup.class;
