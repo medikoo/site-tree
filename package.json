@@ -17,7 +17,7 @@
     "es5-ext": "^0.10.7",
     "d": "^0.1.1",
     "dom-ext ": "git://github.com/medikoo/dom-ext.git#6d893939",
-    "html-dom-ext ": "git://github.com/medikoo/html-dom-ext.git#4ab1f214",
+    "html-dom-ext ": "git://github.com/medikoo/html-dom-ext.git#c7f84a669c63",
     "event-emitter": "^0.3.3",
     "memoizee": "^0.3.8"
   },
