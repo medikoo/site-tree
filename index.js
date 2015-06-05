@@ -21,7 +21,7 @@ var find               = require('es5-ext/array/#/find')
   , SiteNode           = require('./lib/node')
   , resolveRootElement = require('./lib/resolve-root-element')
 
-  , rootNames = { head: true, title: true, body: true }
+  , rootNames = { head: true, title: true, body: true, main: true }
 
   , stringify = JSON.stringify;
 
