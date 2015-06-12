@@ -26,11 +26,14 @@ module.exports = function (T, a) {
 		df.appendChild(ns.span('foo 1 '));
 		df.appendChild(ns.span('foo 2'));
 		return df;
-	}, bar: function () {
-		var df = document.createDocumentFragment();
-		df.appendChild(ns.span('bar 1 '));
-		df.appendChild(ns.span('bar 2'));
-		return df;
+	}, bar: {
+		attributes: { 'data-foo': 'elo' },
+		content: function () {
+			var df = document.createDocumentFragment();
+			df.appendChild(ns.span('bar 1 '));
+			df.appendChild(ns.span('bar 2'));
+			return df;
+		}
 	}, 'partial-content': {
 		class: { active: true },
 		prepend: function () {
@@ -50,6 +53,7 @@ module.exports = function (T, a) {
 	tree.load(page1, context);
 	a(foo.textContent, 'foo 1 foo 2', "Replace content #1");
 	a(bar.textContent, 'bar 1 bar 2', "Replace content #2");
+	a(bar.getAttribute('data-foo'), 'elo');
 	a(partialContent.className, 'active', "Classname");
 	a(partialContent.textContent, 'prepended 1 prepended 2 melon appended 1 appended 2',
 		"Append/Prepend");

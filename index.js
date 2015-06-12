@@ -40,6 +40,10 @@ var SiteTree = module.exports = Object.defineProperties(function (document) {
 				ensureObject(value.class);
 				isConf = true;
 			}
+			if (value.attributes != null) {
+				ensureObject(value.attributes);
+				isConf = true;
+			}
 			if (value.content != null) {
 				this.ensureTemplate(value.content);
 				if (value.prepend != null) {
@@ -86,6 +90,10 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 			if (!conf.element) throw new TypeError("Could not find element of id " + stringify(id));
 			if (setup.class) {
 				conf.class = setup.class;
+				isConf = true;
+			}
+			if (setup.attributes) {
+				conf.attributes = setup.attributes;
 				isConf = true;
 			}
 			if (setup.content != null) {
