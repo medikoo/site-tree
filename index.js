@@ -105,26 +105,26 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 				isConf = true;
 			}
 			if (setup.content != null) {
-				conf.content = this.resolveTemplate(setup.content, context);
+				conf.content = this._resolveTemplate(setup.content, context);
 				return;
 			}
 			if (setup.prepend != null) {
-				conf.prepend = this.resolveTemplate(setup.prepend, context);
+				conf.prepend = this._resolveTemplate(setup.prepend, context);
 				isConf = true;
 			}
 			if (setup.append != null) {
-				conf.append = this.resolveTemplate(setup.append, context);
+				conf.append = this._resolveTemplate(setup.append, context);
 				isConf = true;
 			}
 			if (isConf) return;
-			conf.content = this.resolveTemplate(setup, context);
+			conf.content = this._resolveTemplate(setup, context);
 		}, this);
 		return map;
 	}),
 
 	// Resolves template into DOM (document fragment)
 	// (this method may be overriden on subclasses for custom needs)
-	resolveTemplate: d(function (tpl, context) { return tpl.call(context); }),
+	_resolveTemplate: d(function (tpl, context) { return tpl.call(context); }),
 
 	// Loads provided raw view, so it's current
 	load: d(function (conf, context) {
