@@ -128,7 +128,10 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 
 	// Loads provided raw view, so it's current
 	load: d(function (conf, context) {
-		var node = this._resolve(conf, context[conf._match], context), current = this.current, common;
+		var node, current, common;
+		context = Object(context);
+		node = this._resolve(conf, context[conf._match], context);
+		current = this.current;
 		if (current === node) return;
 		if (current) {
 			common = find.call(current.ancestors, function (ancestor) {
