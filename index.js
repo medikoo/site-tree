@@ -156,7 +156,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 
 	// After elements are exposed in a view. Proceed with reset operations
 	// (this method may be overriden for custom needs)
-	resetElement: d(function (element) {
+	_resetElement: d(function (element) {
 		if (element.nodeType !== 1) return;
 		resetForms.call(element);
 	})
