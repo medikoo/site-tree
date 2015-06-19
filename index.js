@@ -21,7 +21,7 @@ var find               = require('es5-ext/array/#/find')
   , SiteNode           = require('./lib/node')
   , resolveRootElement = require('./lib/resolve-root-element')
 
-  , rootNames = { head: true, title: true, body: true, main: true }
+  , rootNames = { head: true, html: true, title: true, body: true, main: true }
 
   , stringify = JSON.stringify;
 
@@ -36,6 +36,14 @@ var SiteTree = module.exports = Object.defineProperties(function (document) {
 			if (key[0] === '_') return;
 			ensureIdent(key);
 			ensureValue(value);
+			if (key === 'html') {
+				ensureObject(value);
+				if ((value.class != null) || (value.content != null) || (value.prepend != null) ||
+						(value.append != null)) {
+					throw new TypeError("Configuration for <html> element should contain only " +
+						"attributes settings");
+				}
+			}
 			if (value.class != null) {
 				ensureObject(value.class);
 				isConf = true;
