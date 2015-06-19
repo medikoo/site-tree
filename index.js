@@ -87,7 +87,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 	// Resolves view configuration into DOM map
 	// It's done once, and on demand, so right before we want to present given view in a window
 	// for a first time
-	resolveView: d(function (conf, context) {
+	_resolveView: d(function (conf, context) {
 		var map = [];
 		forEach(conf, function (setup, id) {
 			var conf, isConf;
