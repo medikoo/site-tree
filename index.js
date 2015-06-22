@@ -81,7 +81,6 @@ var SiteTree = module.exports = Object.defineProperties(function (document) {
 });
 
 ee(Object.defineProperties(SiteTree.prototype, assign({
-	root: d(null),
 	current: d(null),
 
 	// Resolves view configuration into DOM map
