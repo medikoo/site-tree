@@ -9,9 +9,8 @@ Let's say we have follwing HTML files:
 
 _head.html_
 ```html
-<title>SiteTree test page</title>
 <link rel="icon" href="/favicon.png" />
-<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="/style.css" />
 ```
 
 _body.html_
@@ -39,7 +38,7 @@ _subpage.html_
 <p>Subpage content ...</p>
 ```
 
-Site tree configuration for them may look as:
+SiteTree configuration for them may look as:
 
 ```javascript
 var SiteTree = require('site-tree');
@@ -50,6 +49,7 @@ var siteTree = new SiteTree(document);
 // Configure view nodes:
 // Root node
 var baseView = {
+  title: "SiteTree test page",
 	head: function () {
 		return htmlToDOM('./head.html');
 	},
@@ -59,7 +59,7 @@ var baseView = {
 };
 
 // Homepage node
-var homeView = {
+var homepageView = {
 	_parent: baseView,
   main: function () {
     return htmlToDOM('./homepage.html');
@@ -76,13 +76,13 @@ var subpageView = {
 
 // Switch between views in document:
 // Present homepage
-siteTree.load(homeView);
+siteTree.load(homepageView);
 
 // Switch to subpage
 siteTree.load(subpageView);
 
 // Switch back to homepage
-siteTree.load(homeView)
+siteTree.load(homepageView)
 ```
 
 SiteTree expects view functions to return instances of _DocumentFragment_, but its agnostic in how fragments are resolved, it's why above example doesn't expose logic for `htmlToDOM` function.
