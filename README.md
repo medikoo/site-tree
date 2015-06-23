@@ -5,7 +5,7 @@ Allows to configure a website view tree, which allows automated switching betwee
 
 ##### Basic example:
 
-Let's say we have follwing HTML files:
+Let's say we have following HTML files:
 
 _head.html_
 ```html
