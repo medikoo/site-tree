@@ -20,6 +20,7 @@ var find               = require('es5-ext/array/#/find')
   , resetForms         = require('html-dom-ext/element/#/reset-forms')
   , SiteNode           = require('./lib/node')
   , resolveRootElement = require('./lib/resolve-root-element')
+  , resetDocument      = require('./lib/reset-document')
 
   , rootNames = { head: true, html: true, title: true, body: true, main: true }
 
@@ -143,6 +144,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 			}
 		} else {
 			current = this;
+			resetDocument(this.document);
 		}
 		node.ancestors.slice(0, node.ancestors.indexOf(current)).reverse().forEach(function (ancestor) {
 			ancestor._load();
