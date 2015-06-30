@@ -3,10 +3,7 @@
 var ClassList = require('class-list')
   , document;
 
-try {
-	document = require('jsdom').jsdom();
-} catch (ignore) {}
-
+document = require('jsdom').jsdom();
 if (document) {
 	Object.defineProperty(document.defaultView.HTMLElement.prototype, 'classList', {
 		get: function () {
