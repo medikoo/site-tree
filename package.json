@@ -17,7 +17,7 @@
   "dependencies": {
     "es5-ext": "^0.10.7",
     "d": "^0.1.1",
-    "dom-ext ": "0.0.2",
+    "dom-ext ": "0.0.3",
     "html-dom-ext ": "0.0.0",
     "event-emitter": "^0.3.3",
     "memoizee": "^0.3.8"
