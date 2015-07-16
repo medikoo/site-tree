@@ -18,6 +18,7 @@ var find               = require('es5-ext/array/#/find')
   , ensureDocument     = require('dom-ext/html-document/valid-html-document')
   , reflow             = require('dom-ext/html-document/#/reflow')
   , resetForms         = require('html-dom-ext/element/#/reset-forms')
+  , fixStyleSheets     = require('./lib/fix-dynamic-style-sheets')
   , SiteNode           = require('./lib/node')
   , resolveRootElement = require('./lib/resolve-root-element')
   , resetDocument      = require('./lib/reset-document')
@@ -161,6 +162,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 	_resetElement: d(function (element) {
 		if (element.nodeType !== 1) return;
 		resetForms.call(element);
+		fixStyleSheets(element);
 	})
 }, memoizeMethods({
 	// Resolves template (for given template/matcher combination should be invoked only once)
