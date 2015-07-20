@@ -163,14 +163,24 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 		if (element.nodeType !== 1) return;
 		resetForms.call(element);
 		fixStyleSheets(element);
+	}),
+
+	// Resolves tree node
+	_resolve: d(function (conf, context) {
+		var parent, match;
+		conf = this.constructor.ensureView(conf);
+		match = conf._match;
+		if (conf._parent) {
+			parent = this._resolve(conf._parent, context);
+			if (!match) match = parent.match;
+		} else {
+			parent = this;
+		}
+		return this._resolveUnique(conf, match ? context[match] : undefined, context, parent);
 	})
 }, memoizeMethods({
-	// Resolves template (for given template/matcher combination should be invoked only once)
-	_resolve: d(function (conf, matcher, context) {
-		var parent;
-		conf = this.constructor.ensureView(conf);
-		if (conf._parent) parent = this._resolve(conf._parent, context[conf._parent._match], context);
-		else parent = this;
+	// Resolves tree node once (for given template/match combination should be invoked only once)
+	_resolveUnique: d(function (conf, match, context, parent) {
 		return new SiteNode(conf, context, parent);
 	}, { getNormalizer: getNormalizer })
 }))));
