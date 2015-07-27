@@ -132,7 +132,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 	load: d(function (conf, context) {
 		var node, current, common;
 		context = Object(context);
-		node = this._resolve(conf, context[conf._match], context);
+		node = this._resolve(conf, context);
 		current = this.current;
 		if (current === node) return;
 		if (current) {

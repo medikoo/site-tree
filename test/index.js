@@ -5,7 +5,7 @@ var toArray  = require('es5-ext/array/to-array')
 
 module.exports = function (T, a) {
 	var tree = new T(document), domjs = new Domjs(document), ns = domjs.ns
-	  , header, content, foo, bar, context = {}, partialContent = {}, conf;
+	  , header, content, foo, bar, context = { foo: 'raz' }, partialContent = {}, conf;
 
 	var rootPage = { _name: 'root', body: function () {
 		var df = document.createDocumentFragment();
@@ -21,7 +21,7 @@ module.exports = function (T, a) {
 		return df;
 	} };
 
-	var page1 = { _name: 'page1', _parent: rootPage, foo: function () {
+	var page1 = { _name: 'page1', _parent: rootPage, _match: 'foo', foo: function () {
 		var df = document.createDocumentFragment();
 		df.appendChild(ns.span('foo 1 '));
 		df.appendChild(ns.span('foo 2'));
@@ -50,6 +50,10 @@ module.exports = function (T, a) {
 		}
 	} };
 
+	var page2 = { _name: 'page2', _parent: page1, bar: function () {
+		var df = document.createDocumentFragment();
+		df.appendChild(ns.span('deep insert'));
+	} };
 	tree.load(page1, context);
 	a(foo.textContent, 'foo 1 foo 2', "Replace content #1");
 	a(bar.textContent, 'bar 1 bar 2', "Replace content #2");
@@ -57,6 +61,8 @@ module.exports = function (T, a) {
 	a(partialContent.className, 'active', "Classname");
 	a(partialContent.textContent, 'prepended 1 prepended 2 melon appended 1 appended 2',
 		"Append/Prepend");
+
+	tree.load(page2, context);
 
 	tree.load(rootPage, context);
 	a.deep(toArray(document.body.childNodes), [header, content, partialContent], "Reload home #1");
