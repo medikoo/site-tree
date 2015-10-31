@@ -10,5 +10,5 @@ module.exports = function (t, a) {
 	link.setAttribute('rel', 'stylesheet');
 	link.setAttribute('href', '/foo.css');
 
-	t(div.childNodes);
+	a(Array.isArray(t(div.childNodes)), true);
 };
