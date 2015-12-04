@@ -16,14 +16,14 @@
   },
   "dependencies": {
     "es5-ext": "^0.10.9",
-    "d": "^0.1.1",
+    "d": "1",
     "dom-ext ": "0.0.3",
     "html-dom-ext ": "0.0.1",
     "event-emitter": "^0.3.4",
     "memoizee": "^0.3.9"
   },
   "devDependencies": {
-    "domjs": "git://github.com/medikoo/domjs.git#633cf94d007f2106627180b23daa3becd5cfd2d0",
+    "domjs": "git://github.com/medikoo/domjs.git#51da87f4c2f719da453847e6cb2649fdfb4641e9",
     "jsdom": "^7.1.1",
     "tad": "^0.2.4",
     "xlint": "^0.2.2",
