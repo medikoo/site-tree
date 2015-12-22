@@ -1,6 +1,6 @@
 {
   "name": "site-tree",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A View engine",
   "author": "Mariusz Nowak <medyk@medikoo.com> (http://www.medikoo.com/)",
   "keywords": [
@@ -15,7 +15,7 @@
     "url": "git://github.com/medikoo/site-tree.git"
   },
   "dependencies": {
-    "es5-ext": "^0.10.9",
+    "es5-ext": "^0.10.11",
     "d": "1",
     "dom-ext": "0.0.3",
     "html-dom-ext": "0.0.1",
