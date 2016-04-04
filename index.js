@@ -98,7 +98,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 			var conf, isConf;
 			if (id[0] === '_') {
 				if (id !== '_dynamic') return;
-				forEach(setup.call(context), self);
+				forEach(setup.call(context), self, this);
 				return;
 			}
 			map.push(conf = {});
