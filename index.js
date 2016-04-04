@@ -35,7 +35,10 @@ var SiteTree = module.exports = Object.defineProperties(function (document) {
 	ensureView: d(function (conf) {
 		forEach(ensureObject(conf), function (value, key) {
 			var isConf;
-			if (key[0] === '_') return;
+			if (key[0] === '_') {
+				if (key === '_dynamic') ensureCallable(value);
+				return;
+			}
 			ensureIdent(key);
 			ensureValue(value);
 			if (key === 'html') {
@@ -91,9 +94,13 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 	// for a first time
 	_resolveView: d(function (conf, context) {
 		var map = [];
-		forEach(conf, function (setup, id) {
+		forEach(conf, function self(setup, id) {
 			var conf, isConf;
-			if (id[0] === '_') return;
+			if (id[0] === '_') {
+				if (id !== '_dynamic') return;
+				forEach(setup.call(context), self);
+				return;
+			}
 			map.push(conf = {});
 			if (rootNames[id]) conf.element = resolveRootElement(this.document, id);
 			if (!conf.element) conf.element = this.document.getElementById(id);
