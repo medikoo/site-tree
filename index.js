@@ -137,7 +137,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 
 	// Loads provided raw view, so it's current
 	load: d(function (conf, context) {
-		var node, current, common;
+		var node, current, common, time = Date.now();
 		context = Object(context);
 		node = this._resolve(conf, context);
 		current = this.current;
@@ -161,6 +161,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 		this.current = node;
 		// Assure repaint after content change
 		reflow.call(this.document);
+		console.log("View load:", ((Date.now() - time) / 1000).toFixed(2) + "s");
 		this.emit('load', node);
 	}),
 
