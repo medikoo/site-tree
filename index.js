@@ -161,7 +161,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 		this.current = node;
 		// Assure repaint after content change
 		reflow.call(this.document);
-		console.log("View load:", ((Date.now() - time) / 1000).toFixed(2) + "s");
+		console.log("View render in", ((Date.now() - time) / 1000).toFixed(2) + "s");
 		this.emit('load', node);
 	}),
 
