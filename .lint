@@ -15,7 +15,7 @@ plusplus
 stupid
 vars
 
-predef+ setTimeout
+predef+ setTimeout, console
 
 ./test
 predef+ document
