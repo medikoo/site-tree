@@ -63,6 +63,7 @@ module.exports = function (T, a) {
 		"Append/Prepend");
 
 	tree.load(page2, context);
+	tree.load(page2, context);
 
 	tree.load(rootPage, context);
 	a.deep(toArray(document.body.childNodes), [header, content, partialContent], "Reload home #1");
