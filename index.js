@@ -149,7 +149,10 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 		context = Object(context);
 		node = this._resolve(conf, context);
 		current = this.current;
-		if (current === node) return;
+		if (current === node) {
+			this._inLoad = false;
+			return;
+		}
 		if (current) {
 			common = find.call(current.ancestors, function (ancestor) {
 				return includes.call(this, ancestor);
