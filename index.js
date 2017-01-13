@@ -89,6 +89,9 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 	// Currently loaded view node
 	current: d(null),
 
+	// Wether in process of loading view
+	_inLoad: d(false),
+
 	// Resolves view configuration into DOM map
 	// It's done once, and on demand, so right before we want to present given view in a window
 	// for a first time
@@ -138,6 +141,11 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 	// Loads provided raw view, so it's current
 	load: d(function (conf, context) {
 		var node, current, common, time = Date.now();
+		if (this._inLoad) {
+			throw new Error("Unexpected operation: During load of view, received request to load " +
+				"other view. Such operations (recursive view loads) are not supported");
+		}
+		this._inLoad = true;
 		context = Object(context);
 		node = this._resolve(conf, context);
 		current = this.current;
@@ -162,6 +170,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 		// Assure repaint after content change
 		reflow.call(this.document);
 		console.log("View render in", ((Date.now() - time) / 1000).toFixed(2) + "s");
+		this._inLoad = false;
 		this.emit('load', node);
 	}),
 
