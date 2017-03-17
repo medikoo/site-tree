@@ -1,3 +1,8 @@
+v1.2.0  --  2017.03.17
+* Support dynamic view resolvers
+* Prevent recursive view loads
+* Update dependencies
+
 v1.1.0  --  2015.12.22
 * Introduce workaroound for IE text nodes handling bug
 * Fix resolution of stylesheets

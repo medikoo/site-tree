@@ -1,6 +1,6 @@
 {
   "name": "site-tree",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A View engine",
   "author": "Mariusz Nowak <medyk@medikoo.com> (http://www.medikoo.com/)",
   "keywords": [
@@ -15,17 +15,17 @@
     "url": "git://github.com/medikoo/site-tree.git"
   },
   "dependencies": {
-    "es5-ext": "^0.10.11",
+    "es5-ext": "^0.10.14",
     "d": "1",
-    "dom-ext": "0.0.3",
-    "html-dom-ext": "0.0.1",
-    "event-emitter": "^0.3.4",
-    "memoizee": "^0.3.9"
+    "dom-ext": "0.1",
+    "html-dom-ext": "0.1",
+    "event-emitter": "^0.3.5",
+    "memoizee": "^0.4.4"
   },
   "devDependencies": {
-    "domjs": "git://github.com/medikoo/domjs.git#51da87f4c2f719da453847e6cb2649fdfb4641e9",
-    "jsdom": "^7.1.1",
-    "tad": "^0.2.4",
+    "domjs": "^0.3.1",
+    "jsdom": "^9.12",
+    "tad": "^0.2.7",
     "xlint": "^0.2.2",
     "xlint-jslint-medikoo": "^0.1.4"
   },
