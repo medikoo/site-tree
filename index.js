@@ -159,7 +159,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 			this._inLoad = false;
 			return;
 		}
-	
+
 		// We need to unload all view nodes until common ancestor
 		if (current) {
 			common = find.call(current.ancestors, function (ancestor) {
