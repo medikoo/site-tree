@@ -141,18 +141,26 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 	// Loads provided raw view, so it's current
 	load: d(function (conf, context) {
 		var node, current, common, time = Date.now();
+
+		// Prevent eventual recursive loads
 		if (this._inLoad) {
 			throw new Error("Unexpected operation: During load of view, received request to load " +
 				"other view. Such operations (recursive view loads) are not supported");
 		}
 		this._inLoad = true;
 		context = Object(context);
+
+		// Resolve DOM for view node
 		node = this._resolve(conf, context);
 		current = this.current;
+
+		// No action if node is already a current view node
 		if (current === node) {
 			this._inLoad = false;
 			return;
 		}
+	
+		// We need to unload all view nodes until common ancestor
 		if (current) {
 			common = find.call(current.ancestors, function (ancestor) {
 				return includes.call(this, ancestor);
@@ -162,14 +170,19 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 				current = current.parent;
 			}
 		} else {
+			// If no common ancestor we just clear the document and load on carte blanche
 			current = this;
 			resetDocument(this.document);
 		}
+
+		// Load all ancestor view nodes
 		node.ancestors.slice(0, node.ancestors.indexOf(current)).reverse().forEach(function (ancestor) {
 			ancestor._load();
 		});
+		// Load view node in question
 		node._load();
 		this.current = node;
+
 		// Assure repaint after content change
 		reflow.call(this.document);
 		console.log("View render in", ((Date.now() - time) / 1000).toFixed(2) + "s");
@@ -185,7 +198,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 		fixStyleSheets(element);
 	}),
 
-	// Resolves tree node
+	// Resolves (generates DOM but do not load) tree node
 	_resolve: d(function (conf, context) {
 		var parent, match;
 		conf = this.constructor.ensureView(conf);
