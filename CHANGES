@@ -1,3 +1,7 @@
+v1.2.1  --  2017.03.23
+* Ensure superflous body element as created by browser is removed
+* Improve code documentation
+
 v1.2.0  --  2017.03.17
 * Support dynamic view resolvers
 * Prevent recursive view loads
