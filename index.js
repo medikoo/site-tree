@@ -11,6 +11,7 @@ var find               = require('es5-ext/array/#/find')
   , ensureValue        = require('es5-ext/object/valid-value')
   , partial            = require('es5-ext/function/#/partial')
   , d                  = require('d')
+  , lazy               = require('d/lazy')
   , ee                 = require('event-emitter')
   , memoizeMethods     = require('memoizee/methods-plain')
   , getNormalizer      = partial.call(require('memoizee/normalizers/get-fixed'), 2)
@@ -159,6 +160,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 			this._inLoad = false;
 			return;
 		}
+		this.current = node;
 
 		// We need to unload all view nodes until common ancestor
 		if (current) {
@@ -183,12 +185,18 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 			// Load view node in question
 			node._load();
 		}
-		this.current = node;
 
 		// Assure repaint after content change
 		reflow.call(this.document);
 		this._inLoad = false;
 		this.emit('load', node);
+	}),
+
+	// Returns registered promises, and clears promises pool
+	releasePromises: d(function () {
+		var promises = this._promises;
+		delete this._promises;
+		return promises;
 	}),
 
 	// After elements are exposed in a view. Proceed with reset operations
@@ -217,4 +225,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 	_resolveUnique: d(function (conf, match, context, parent) {
 		return new SiteNode(conf, context, parent);
 	}, { getNormalizer: getNormalizer })
+}), lazy({
+	// Pool for registered promises
+	_promises: d(function () { return []; })
 }))));

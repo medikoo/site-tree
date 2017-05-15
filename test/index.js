@@ -50,9 +50,11 @@ module.exports = function (T, a) {
 		}
 	} };
 
+  var promise = { then: function () {} };
 	var page2 = { _name: 'page2', _parent: page1, bar: function () {
 		var df = document.createDocumentFragment();
 		df.appendChild(ns.span('deep insert'));
+		this.registerPromise(promise);
 	} };
 	tree.load(page1, context);
 	a(foo.textContent, 'foo 1 foo 2', "Replace content #1");
@@ -62,8 +64,12 @@ module.exports = function (T, a) {
 	a(partialContent.textContent, 'prepended 1 prepended 2 melon appended 1 appended 2',
 		"Append/Prepend");
 
+	a.deep(tree._promises, []);
 	tree.load(page2, context);
 	tree.load(page2, context); // To ensure double loading same page has no effect
+	a.deep(tree._promises, [promise]);
+	a.deep(tree.releasePromises(), [promise]);
+	a.deep(tree._promises, []);
 
 	tree.load(rootPage, context);
 	a.deep(toArray(document.body.childNodes), [header, content, partialContent], "Reload home #1");
