@@ -50,7 +50,7 @@ module.exports = function (T, a) {
 		}
 	} };
 
-  var promise = { then: function () {} };
+	var promise = { then: function () {} };
 	var page2 = { _name: 'page2', _parent: page1, bar: function () {
 		var df = document.createDocumentFragment();
 		df.appendChild(ns.span('deep insert'));
