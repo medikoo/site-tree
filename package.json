@@ -15,7 +15,7 @@
     "url": "git://github.com/medikoo/site-tree.git"
   },
   "dependencies": {
-    "es5-ext": "^0.10.14",
+    "es5-ext": "^0.10.18",
     "d": "1",
     "dom-ext": "0.1",
     "html-dom-ext": "0.1",
