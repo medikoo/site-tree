@@ -9,3 +9,7 @@ All notable changes to this project will be documented in this file. See [standa
 ### Features
 
 * introduce visibility awareness to nodes ([e5bd437](https://github.com/medikoo/site-tree/commit/e5bd437))
+
+### Old changelog
+
+Can be found at `CHANGES`
