@@ -49,19 +49,30 @@ module.exports = function (t, a) {
 		}
 	} };
 
+	var loadEvents = [];
 	var page2 = { _name: 'page2', _parent: rootPage, content: function () {
+		loadEvents.push("page2:render");
 		var df = document.createDocumentFragment();
 		par = df.appendChild(ns.p('Whatever'));
 		other = df.appendChild(ns.div({ id: 'other-content' },
 			ns.div('page2 other 1 '),
 			ns.div('page2 other 2')));
+		this.on("load:before", function () { loadEvents.push("page2:load:before"); });
+		this.on("load", function () { loadEvents.push("page2:load:after"); });
+		this.on("unload:before", function () { loadEvents.push("page2:unload:before"); });
+		this.on("unload", function () { loadEvents.push("page2:unload:after"); });
 		return df;
 	} };
 
 	var page3 = { _name: 'page3', _parent: page2, 'other-content': function () {
+		loadEvents.push("page3:render");
 		var df = document.createDocumentFragment();
 		df.appendChild(ns.div('other 1 '));
 		df.appendChild(ns.p('other 2'));
+		this.on("load:before", function () { loadEvents.push("page3:load:before"); });
+		this.on("load", function () { loadEvents.push("page3:load:after"); });
+		this.on("unload:before", function () { loadEvents.push("page3:unload:before"); });
+		this.on("unload", function () { loadEvents.push("page3:unload:after"); });
 		return df;
 	} };
 
@@ -78,12 +89,17 @@ module.exports = function (t, a) {
 	a(partialContent.textContent, 'prepended 1 prepended 2 melon appended 1 appended 2',
 		"Append/Prepend");
 
+	a.deep(loadEvents, []);
 	tree.load(page3, context);
+	a.deep(loadEvents, ["page2:render", "page2:load:after", "page3:render", "page3:load:after"]);
+	loadEvents.length = 0;
+
 	a.deep(toArray(content.childNodes), [par, other],
 		"Replace content (2 steps) #1");
 	a(other.textContent, 'other 1 other 2', "Replace content (2 steps) #2");
 
 	tree.load(page2, context);
+	a.deep(loadEvents, ["page3:unload:before", "page3:unload:after"]);
 	a(other.textContent, 'page2 other 1 page2 other 2', "Go back");
 
 	tree.load(newpage, context);
