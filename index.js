@@ -141,7 +141,7 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 
 	// Loads provided raw view, so it's current
 	load: d(function (conf, context) {
-		var node, current, common, time = Date.now();
+		var node, current, common;
 
 		// Prevent eventual recursive loads
 		if (this._inLoad) {
