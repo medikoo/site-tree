@@ -163,8 +163,9 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 		// We need to unload all view nodes until common ancestor
 		if (current) {
 			common = find.call(current.ancestors, function (ancestor) {
-				return includes.call(this, ancestor);
-			}, node.ancestors);
+				if (ancestor === node) return true;
+				return includes.call(node.ancestors, ancestor);
+			});
 			while (current !== common) {
 				current._unload();
 				current = current.parent;
@@ -175,12 +176,13 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 			resetDocument(this.document);
 		}
 
-		// Load all ancestor view nodes
-		node.ancestors.slice(0, node.ancestors.indexOf(current)).reverse().forEach(function (ancestor) {
-			ancestor._load();
-		});
-		// Load view node in question
-		node._load();
+		if (current !== node) {
+			// Load all ancestor view nodes
+			node.ancestors.slice(0, node.ancestors.indexOf(current)).reverse()
+				.forEach(function (ancestor) { ancestor._load(); });
+			// Load view node in question
+			node._load();
+		}
 		this.current = node;
 
 		// Assure repaint after content change
