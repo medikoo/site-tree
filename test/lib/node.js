@@ -104,7 +104,8 @@ module.exports = function (t, a) {
 	a(other.textContent, 'other 1 other 2', "Replace content (2 steps) #2");
 
 	tree.load(page2, context);
-	a.deep(loadEvents, ["page3:unload:before", "page3:unload:after"]);
+	a.deep(loadEvents, ["page3:unload:before", "page3:unload:after", "page2:load:before",
+		"page2:load:after"]);
 	a(other.textContent, 'page2 other 1 page2 other 2', "Go back");
 
 	tree.load(newpage, context);
