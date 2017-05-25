@@ -155,35 +155,40 @@ ee(Object.defineProperties(SiteTree.prototype, assign({
 		node = this._resolve(conf, context);
 		current = this.current;
 
-		// No action if node is already a current view node
-		if (current === node) {
-			this._inLoad = false;
-			return;
-		}
 		this.current = node;
 
-		// We need to unload all view nodes until common ancestor
-		if (current) {
-			common = find.call(current.ancestors, function (ancestor) {
-				if (ancestor === node) return true;
-				return includes.call(node.ancestors, ancestor);
-			});
-			while (current !== common) {
-				current._unload();
-				current = current.parent;
+		if (current !== node) {
+			// We need to unload all view nodes until common ancestor
+			if (current) {
+				common = find.call(current.ancestors, function (ancestor) {
+					if (ancestor === node) return true;
+					return includes.call(node.ancestors, ancestor);
+				});
+				while (current !== common) {
+					current._unload();
+					current = current.parent;
+				}
+			} else {
+				// If no common ancestor we just clear the document and load on carte blanche
+				common = current = this;
+				resetDocument(this.document);
+			}
+
+			if (node !== common) {
+				// Load all ancestor view nodes
+				node.ancestors.slice(0, node.ancestors.indexOf(current)).reverse()
+					.forEach(function (ancestor) { ancestor._load(); });
+				// Load view node in question
+				node._load();
 			}
 		} else {
-			// If no common ancestor we just clear the document and load on carte blanche
-			current = this;
-			resetDocument(this.document);
+			// No change of current node, we just reset the view
+			common = node;
 		}
-
-		if (current !== node) {
-			// Load all ancestor view nodes
-			node.ancestors.slice(0, node.ancestors.indexOf(current)).reverse()
-				.forEach(function (ancestor) { ancestor._load(); });
-			// Load view node in question
-			node._load();
+		// Reset all nodes that remained in view
+		while (common && (common !== this)) {
+			common._reset();
+			common = common.parent;
 		}
 
 		// Assure repaint after content change

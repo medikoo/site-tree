@@ -7,7 +7,7 @@ var toArray  = require('es5-ext/array/to-array')
 module.exports = function (t, a) {
 	var tree = new SiteTree(document), domjs = new Domjs(document), ns = domjs.ns
 	  , header, content, foo, bar, par, other, newcontent, context = {}
-	  , partialContent = {};
+	  , partialContent = {}, input, form;
 
 	var rootPage = { _name: 'root', body: function () {
 		var df = document.createDocumentFragment();
@@ -19,6 +19,7 @@ module.exports = function (t, a) {
 			ns.div(bar = ns.div({ id: 'bar' },
 				ns.p('Other foo'),
 				ns.p('Other bar')))));
+		df.appendChild(form = ns.form(ns.div(input = ns.input({ type: "text", value: "miszka" }))));
 		partialContent = df.appendChild(ns.div({ id: 'partial-content' }, ' melon '));
 		return df;
 	} };
@@ -90,7 +91,11 @@ module.exports = function (t, a) {
 		"Append/Prepend");
 
 	a.deep(loadEvents, []);
+	a(input.value, "miszka");
+	input.value = "elo";
+	a(input.value, "elo");
 	tree.load(page3, context);
+	a(input.value, "miszka");
 	a.deep(loadEvents, ["page2:render", "page2:load:after", "page3:render", "page3:load:after"]);
 	loadEvents.length = 0;
 
@@ -106,7 +111,8 @@ module.exports = function (t, a) {
 	a.deep(toArray(document.body.childNodes), [newcontent], "Replace whole content");
 
 	tree.load(rootPage, context);
-	a.deep(toArray(document.body.childNodes), [header, content, partialContent], "Reload home #1");
+	a.deep(toArray(document.body.childNodes), [header, content, form, partialContent],
+		"Reload home #1");
 	a.deep(toArray(content.childNodes), [foo, bar.parentNode], "Reload home #2");
 	a(partialContent.className, '');
 	a(partialContent.textContent, ' melon ', "Append/Prepend");
